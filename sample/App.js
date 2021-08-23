@@ -1,49 +1,70 @@
 import React, { useState } from "react";
-import { SafeAreaView, Text, StatusBar, View, Switch, StyleSheet } from "react-native";
-import Toast from 'react-native-easy-toast';
+import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, ToastAndroid, Alert, NativeModules } from "react-native";
+
+const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
+const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
+
+const SWITCH_TYPE_LOCATION = 1
+const SWITCH_TYPE_MARKETING = 2
 
 const App = () => {
-  const locationSwitchText = "위치 기반 서비스 동의"
-  const marketingSwitchText = "마케팅 서비스 동의"
-
   return (
     <SafeAreaView style={appStyles.container}>
       <StatusBar
         barStyle={'light-content'}
         backgroundColor="#000000" />
-      <SwitchComponent type={locationSwitchText} />
-      <SwitchComponent type={marketingSwitchText} />
+      <SwitchComponent
+        text={SWITCH_TEXT_LOCATION}
+        type={SWITCH_TYPE_LOCATION} />
+      <SwitchComponent
+        text={SWITCH_TEXT_MARKETING}
+        type={SWITCH_TYPE_MARKETING} />
     </SafeAreaView>
   );
 }
 
 const SwitchComponent = (props) => {
-  let toastRef;
-  const showToast = function(type, isEnabled){
-    const text = type + " permission is " + isEnabled
-    console.log(text)
-    toastRef.show(text)
-  }
-  const switchType = props.type
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => {
-    console.log(switchType)
-    console.log(isEnabled)
-    if (switchType === "location") {
-      console.log("1")
-    } else if (switchType === "marketing") {
-      console.log("2")
+  const toggleSwitch = (value) => {
+    setIsEnabled(value);
+    if(Platform.OS === 'android'){
+      if(props.type === SWITCH_TYPE_LOCATION){
+        /**
+         * OS: Android
+         * type: SWITCH_TYPE_LOCATION (위치 기반 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
+         */
+      }else if(props.type === SWITCH_TYPE_MARKETING){
+        /**
+         * OS: Android
+         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         */
+      }
+    }else if(Platform.OS === 'ios'){
+      if(props.type === SWITCH_TYPE_LOCATION){
+        /**
+         * OS: iOS
+         * type: SWITCH_TYPE_LOCATION (위치 기반 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
+         */
+      }else if(props.type === SWITCH_TYPE_MARKETING){
+        /**
+         * OS: iOS
+         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         */
+      }
     }
-    console.log(isEnabled)
-    showToast(switchType, isEnabled)
-    setIsEnabled(previousState => !previousState);
-    console.log(isEnabled)
   }
-
 
   return (
     <SafeAreaView style={switchStyles.container}>
-      <Text>{switchType}</Text>
+      <Text>{props.text}</Text>
       <Switch
         trackColor={{ false: "#767577", true: "#81b0ff" }}
         thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
@@ -51,7 +72,6 @@ const SwitchComponent = (props) => {
         onValueChange={toggleSwitch}
         value={isEnabled}
       />
-      <Toast ref={(toast) => toastRef = toast} position={'bottom'} />
     </SafeAreaView>
   )
 }
@@ -59,16 +79,18 @@ const SwitchComponent = (props) => {
 const appStyles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
 const switchStyles = StyleSheet.create({
   container: {
-    flexDirection:'column',
-    alignItems: "center",
-    justifyContent: "flex-start"
+    margin: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
