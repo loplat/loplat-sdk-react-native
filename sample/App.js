@@ -1,112 +1,97 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, { useState } from "react";
+import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, ToastAndroid, Alert, NativeModules } from "react-native";
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
+const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const SWITCH_TYPE_LOCATION = 1
+const SWITCH_TYPE_MARKETING = 2
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={appStyles.container}>
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor="#000000" />
+      <SwitchComponent
+        text={SWITCH_TEXT_LOCATION}
+        type={SWITCH_TYPE_LOCATION} />
+      <SwitchComponent
+        text={SWITCH_TEXT_MARKETING}
+        type={SWITCH_TYPE_MARKETING} />
     </SafeAreaView>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+const SwitchComponent = (props) => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = (value) => {
+    setIsEnabled(value);
+    if(Platform.OS === 'android'){
+      if(props.type === SWITCH_TYPE_LOCATION){
+        /**
+         * OS: Android
+         * type: SWITCH_TYPE_LOCATION (위치 기반 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
+         */
+      }else if(props.type === SWITCH_TYPE_MARKETING){
+        /**
+         * OS: Android
+         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         */
+      }
+    }else if(Platform.OS === 'ios'){
+      if(props.type === SWITCH_TYPE_LOCATION){
+        /**
+         * OS: iOS
+         * type: SWITCH_TYPE_LOCATION (위치 기반 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
+         */
+      }else if(props.type === SWITCH_TYPE_MARKETING){
+        /**
+         * OS: iOS
+         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * value: value (동의 여부)
+         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         */
+      }
+    }
+  }
+
+  return (
+    <SafeAreaView style={switchStyles.container}>
+      <Text>{props.text}</Text>
+      <Switch
+        trackColor={{ false: "#767577", true: "#81b0ff" }}
+        thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={isEnabled}
+      />
+    </SafeAreaView>
+  )
+}
+
+const appStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+});
+
+const switchStyles = StyleSheet.create({
+  container: {
+    margin: 10,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 });
 
 export default App;
