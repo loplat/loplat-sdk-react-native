@@ -41,9 +41,13 @@ class iosPlengi: NSObject {
     _ = Plengi.stop()
   }
   
+  @objc(enableAdNetwork:enableNoti:)
+  func enableAdNetwork(_ enableAd: Bool, enableNoti: Bool) {
+    _ = Plengi.enableAdNetwork(enableAd, enableNoti: enableNoti)
+  }
+  
   @objc(requestAlwaysAuthorization)
   func requestAlwaysAuthorization() {
-    print("plengi Request Always Authorization")
     Plengi.requestAlwaysLocationAuthorization()
   }
 }
