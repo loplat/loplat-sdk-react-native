@@ -12,10 +12,10 @@
 
 @interface RCT_EXTERN_MODULE(iosPlengi, NSObject)
 
-RCT_EXTERN_METHOD(initialize:(NSString *)clientId clientSecret:(NSString *)clientSecret)
+RCT_EXTERN_METHOD(initialize:(NSString *)clientId clientSecret:(NSString *)clientSecret: callback:(RCTResponseSenderBlock)callback)
 
-RCT_EXTERN_METHOD(start)
-RCT_EXTERN_METHOD(stop)
+RCT_EXTERN_METHOD(start:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(stop:(RCTResponseSenderBlock)callback)
 
 RCT_EXTERN_METHOD(enableAdNetwork:(BOOL *)enableAd enableNoti:(BOOL *)enableNoti)
 RCT_EXTERN_METHOD(requestAlwaysAuthorization)

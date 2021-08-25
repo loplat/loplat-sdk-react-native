@@ -21,24 +21,33 @@ class iosPlengi: NSObject {
     return true
   }
   
-  @objc(initialize:clientSecret:)
-  func initialize(_ clientId: String, clientSecret: String) {
-    _ = Plengi.initialize(clientID: clientId, clientSecret: clientSecret, echoCode: nil)
+  @objc(initialize:clientSecret:callback:)
+  func initialize(_ clientId: String, clientSecret: String, callback: RCTResponseSenderBlock) {
+    let result = Plengi.initialize(clientID: clientId, clientSecret: clientSecret, echoCode: nil)
+    callback([result.rawValue])
   }
   
-  @objc(initialize:clientSecret:echoCode:)
-  func initialize(_ clientId: String, clientSecret: String, echoCode: String) {
-    _ = Plengi.initialize(clientID: clientId, clientSecret: clientSecret, echoCode: echoCode)
+  @objc(initialize:clientSecret:echoCode:callback:)
+  func initialize(_ clientId: String, clientSecret: String, echoCode: String, callback: RCTResponseSenderBlock) {
+    let result = Plengi.initialize(clientID: clientId, clientSecret: clientSecret, echoCode: echoCode)
+    callback([result.rawValue])
   }
   
-  @objc(start)
-  func start() {
-    _ = Plengi.start()
+  @objc(start:)
+  func start(_ callback: RCTResponseSenderBlock) {
+    let result = Plengi.start()
+    callback([result.rawValue])
+    //callback([NSNull(), ["result": result.rawValue]])
+    
+    
   }
   
-  @objc(stop)
-  func stop() {
-    _ = Plengi.stop()
+  @objc(stop:)
+  func stop(_ callback: RCTResponseSenderBlock) {
+    let result = Plengi.stop()
+    callback([result.rawValue])
+    //callback([NSNull(), ["result": result.rawValue]])
+    
   }
   
   @objc(enableAdNetwork:enableNoti:)
