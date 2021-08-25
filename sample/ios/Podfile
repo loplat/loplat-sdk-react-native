@@ -11,6 +11,7 @@ target 'sample' do
     # to enable hermes on iOS, change `false` to `true` and then install pods
     :hermes_enabled => false
   )
+  pod 'MiniPlengi', '1.4.2.xcode12.5'
 
   target 'sampleTests' do
     inherit! :complete
