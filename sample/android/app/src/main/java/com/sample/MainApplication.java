@@ -2,9 +2,7 @@ package com.sample;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.util.Log;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -106,7 +104,7 @@ public class MainApplication extends Application implements ReactApplication {
         String echoCode = "18497358207"; // Test EchoCode
 
         // 위치 인식 정보를 수신할 Listener 등록
-        plengi.setListener(new LoplatPlengiListener());
+        plengi.setListener(new LoplatPlengiListener(mReactNativeHost));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             /**
@@ -138,7 +136,11 @@ public class MainApplication extends Application implements ReactApplication {
             plengi.setBackgroundLocationAccessDialogLayout(R.layout.dialog_background_location_info);
         }
 
-        // Loplat SDK 설정들은 반드시 Plengi.init() 전에 호출 필요
+        /**
+         * Loplat SDK 설정들은 반드시 Plengi.init() 전에 호출 필요
+         * [매우 중요] echoCode 는 최초에 없을 때에는 null, 사용자 로그인 후 echoCode 를 받아왔다면 저장후에 저장한 값을 아래에 기입
+         * echoCode 가 null 인 상태에서 최초로 로그인하여 echoCode 를 얻어왔다면 해당 echoCode 를 입력한 init 을 다시 실행해야 함
+         */
         plengi.init(clientId, clientSecret, echoCode);
     }
 }

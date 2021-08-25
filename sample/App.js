@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules } from "react-native";
+import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules, DeviceEventEmitter, PermissionsAndroid} from "react-native";
 
 const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
 const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
@@ -7,40 +7,68 @@ const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
 const SWITCH_TYPE_LOCATION = 1
 const SWITCH_TYPE_MARKETING = 2
 
+/**
+ * Android 권한 획득
+ * 필요 권한 : android.permission.ACCESS_FINE_LOCATION
+ * 필요 권한 : android.permission.ACCESS_COARSE_LOCATION
+ */
+const requestPermission = async () => {
+  if (Platform.OS === "android") {
+      await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      ]).then((result)=>{
+          if (result['android.permission.ACCESS_FINE_LOCATION']
+          && result['android.permission.ACCESS_COARSE_LOCATION']
+          === 'granted') {
+              console.log("모든 권한 획득");
+          } else{
+              console.log("권한거절");
+          }
+      })
+  }
+}
+
 const App = () => {
-  const clientId = 'loplatdemo' // Test ID
-  const clientSecret = 'loplatdemokey' // Test PW
-  const echoCode = '18497358207' // Test CODE
+  const [resultText, setMyText] = useState("Default Text");
 
   if (Platform.OS === 'android') {
-    NativeModules.AndroidPlengi.init(clientId, clientSecret, echoCode,
-     (result) => {
-       console.log(`init result: ${result}`);
-     }
-    )
+    requestPermission()
+
+    /**
+     * @functions clientId, clientSecret, echoCode 를 변경(설정) 하기 위한 android bridge 함수
+     * NativeModules.AndroidPlengi.init(clientId, clientSecret, echoCode,
+     *   (result) => {
+     *     console.log(`init result: ${result}`);
+     *   }
+     * )
+     */
+
+    const onListenSDK = (event) => {
+      /**
+       * Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
+       * console.log('plengiResponse start')
+       * console.log(typeof event.plengiResponse)
+       * console.log(event.plengiResponse)
+       * console.log(event.plengiResponse.type)
+       * console.log(event.plengiResponse.placeEvent)
+       * console.log(event.plengiResponse.place.category)
+       * console.log('plengiResponse finish')
+       */
+
+      setMyText(JSON.stringify(event.plengiResponse))
+    }
+
+    // Loplat SDK 의 위치정보의 결과 값을 Native(android) 에서 React-Native 로 불러오기 위한 리스너 등록
+    DeviceEventEmitter.addListener('listen', onListenSDK);
   }
-  
-  /**
-   * MainApplication 에서 init 되지만 clientId, clientSecret, echoCode 를 변경하고 싶다면 사용
-   * const clientId = 'loplatdemo' // Test ID
-   * const clientSecret = 'loplatdemokey' // Test PW
-   * const echoCode = '18497358207' // Test CODE
-   * 
-   * if (Platform.OS === 'android') {
-   *  NativeModules.AndroidPlengi.init(clientId, clientSecret, echoCode,
-   *    (result) => {
-   *      console.log(`stop result: ${result}`);
-   *    }
-   *  )
-   * else if (Platform.OS === 'ios') {
-   * }
-   */
 
   return (
     <SafeAreaView style={appStyles.container}>
       <StatusBar
         barStyle={'light-content'}
         backgroundColor="#000000" />
+      <Text>{resultText}</Text>
       <SwitchComponent
         text={SWITCH_TEXT_LOCATION}
         type={SWITCH_TYPE_LOCATION} />
@@ -55,7 +83,6 @@ const SwitchComponent = (props) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = (value) => {
     setIsEnabled(value);
-    console.log('toggleSwitch')
     if (Platform.OS === 'android') {
       if (props.type === SWITCH_TYPE_LOCATION) {
         /**
@@ -65,14 +92,12 @@ const SwitchComponent = (props) => {
          * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
          */
         if (value === true) {
-          console.log('위치 기반 서비스 이용에 동의 하였습니다')
           NativeModules.AndroidPlengi.start(
             (result) => {
               console.log(`start result: ${result}`);
             }
           )
         } else {
-          console.log('위치 기반 서비스 이용을 취소 하였습니다')
           NativeModules.AndroidPlengi.stop(
             (result) => {
               console.log(`stop result: ${result}`);
@@ -87,10 +112,8 @@ const SwitchComponent = (props) => {
          * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
          */
         if (value === true) {
-          console.log('푸시 알림 마케팅 수신에 동의 하였습니다')
           NativeModules.AndroidPlengi.enableAdNetwork(value, value)
         } else {
-          console.log('푸시 알림 마케팅 수신에 취소 하였습니다')
           NativeModules.AndroidPlengi.enableAdNetwork(value, false)
         }
       }

@@ -1,139 +1,105 @@
 package com.sample;
 
-import android.content.Context;
-import android.content.Intent;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.loplat.placeengine.PlengiListener;
 import com.loplat.placeengine.PlengiResponse;
-import com.loplat.placeengine.cloud.ResponseMessage;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 
 public class LoplatPlengiListener implements PlengiListener {
-    Context mContext = MainApplication.getContext();
+
+    private static ReactNativeHost reactNativeHost;
+
+    public LoplatPlengiListener(ReactNativeHost mReactNativeHost) {
+        this.reactNativeHost = mReactNativeHost;
+    }
+
 
     @Override
     public void listen(PlengiResponse response) {
-        System.out.println("LoplatPlengiListener: " + response.type);
+        // Loplat SDK 로부터 위치 정보를 받은 후 React-Native 에 값을 넘김
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(response);
+            JsonObject gsonObject = new JsonParser().parse(json).getAsJsonObject();
+            JSONObject jsonObject = new JSONObject(gsonObject.toString());
+            WritableMap map = convertJsonToMap(jsonObject);
 
-        // init시 전달된 echo code
-        String echo_code = response.echo_code;
+            WritableMap params = Arguments.createMap();
+            params.putMap("plengiResponse", map);
 
-        if (response.result == PlengiResponse.Result.SUCCESS) {
-
-            if(response.type == PlengiResponse.ResponseType.PLACE_EVENT
-                    || response.type == PlengiResponse.ResponseType.PLACE_TRACKING) {
-
-                String description = "type: " + response.type + "\n";
-
-                // 매장 방문 관련 event (NOT_AVAILABLE / ENTER / LEAVE / NEARBY)
-                int event = response.placeEvent;
-
-                // 매장이 인식 되었을 때
-                if (response.place != null) {
-                    String branch = (response.place.tags == null) ? "" : response.place.tags;
-                    String clientCode = (response.place.client_code == null || !response.place.client_code.isEmpty())
-                            ? null : response.place.client_code;
-
-                    if (event == PlengiResponse.PlaceEvent.ENTER) {
-                        description += "   [ENTER]" + response.place.name + "," + branch + "(" + response.place.loplatid + "), "
-                                + response.place.floor + "F, " + String.format("%.3f", response.place.accuracy)
-                                + "/" + String.format("%.3f", response.place.threshold);
-                    } else if (event == PlengiResponse.PlaceEvent.LEAVE) {
-                        description += "   [LEAVE]" + response.place.name + "," + branch + "(" + response.place.loplatid + ")";
-                    } else if (event == PlengiResponse.PlaceEvent.NEARBY) {
-                        description += "   [NEARBY]" + response.place.name + "," + branch + "(" + response.place.loplatid + "), "
-                                + response.place.floor + "F, " + String.format("%.3f", response.place.accuracy)
-                                + "/" + String.format("%.3f", response.place.threshold);
-                    } else {
-                        description += "   [" + event + "]" + response.place.name + "," + branch + "(" + response.place.loplatid + "), "
-                                + response.place.floor + "F";
-                    }
-
-                    if (clientCode != null) {
-                        description += ", code: "+clientCode;
-                    }
-                }
-
-                // 상권이 인식 되었을 때
-                if (response.area != null) {
-                    description += "\n   ";
-                    description += "[AREA] " + response.area.id + ", " + response.area.name + ","
-                            + response.area.tag + "(" + response.area.lat + "," + response.area.lng + ")";
-                }
-
-                // 복합몰이 인식 되었을 때
-                if (response.complex != null) {
-                    description += "\n   ";
-                    description += "[COMPLEX] " + response.complex.id + "]" + response.complex.name + ","
-                            + response.complex.branch_name + "," + response.complex.category;
-                }
-
-                // GeoFence 정보
-                if (response.geoFence != null) {
-                    description += "\n   ";
-                    description += "[GEOFENCE] " + response.geoFence.getFences().size() + "개";
-                    for (int i=0 ; i<response.geoFence.getFences().size() ; i++) {
-                        ResponseMessage.Fence fence = response.geoFence.getFences().get(i);
-                        description += "\n      ["+(i+1)+"] " + fence.getGfId() + ", " + fence.getName() + ", " + fence.getDist();
-                    }
-                }
-
-                // Device 위경도
-                if (response.location != null) {
-                    description += "\n   ";
-                    description += "[DEVICE] (" + response.location.lat + ", " + response.location.lng + ")";
-                }
-
-                // 행정구역
-                if (response.district != null) {
-                    description += "\n   ";
-                    description += "[DISTRICT] ";
-
-                    // 행정구역을 활용할 때에는 행정구역 자체의 위경도가 없기 떄문에 Device의 위경도를 사용.
-                    if (response.location != null) {
-                        description += "(" + response.location.lat + ", " + response.location.lng + ") ";
-                    }
-
-                   description += "lv0=" + response.district.lv0Code
-                            + ", lv1=" + response.district.lv1Code + "_" + response.district.lv1Name
-                            + ", lv2=" + response.district.lv2Code + "_" + response.district.lv2Name
-                            + ", lv3=" + response.district.lv3Code + "_" + response.district.lv3Name;
-                }
-
-                if (response.advertisement != null) {
-                    // loplat X 광고 정보가 있을 때
-                    // loplat SDK 통한 광고 알림을 사용하지 않고
-                    // Custom Notification 혹은 직접 이벤트 처리 할 경우 해당 객체를 사용
-                }
-
-                System.out.println(description);
-                sendLoplatResponseToApplication("placeevent", description);
-            }
-        } else if (response.result == PlengiResponse.Result.FAIL && response.errorReason.equals(PlengiResponse.LOCATION_ACQUISITION_FAIL)) {
-            String description = "[" + response.errorReason + "]";
-            // Device 위경도
-            if (response.location != null) {
-                description += "\n   ";
-                description += "[DEVICE] (" + response.location.lat + ", " + response.location.lng + ")";
-            }
-
-            sendLoplatResponseToApplication("placeevent", description);
-        } else {
-            String errorReason = response.errorReason;
-
-            sendLoplatResponseToApplication("error", errorReason);
+            ReactInstanceManager reactInstanceManager = reactNativeHost.getReactInstanceManager();
+            ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
+            reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit("listen", params);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    /**
-     * 위치 인식 결과 전달
-     */
-    private void sendLoplatResponseToApplication(String type, String response) {
-        Intent i = new Intent();
-        i.setAction("com.loplat.sample.response");
-        i.putExtra("type", type);
-        i.putExtra("response", response);
-        LocalBroadcastManager.getInstance(mContext).sendBroadcast(i);
+    private static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
+        WritableMap map = new WritableNativeMap();
+
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = jsonObject.get(key);
+            if (value instanceof JSONObject) {
+                map.putMap(key, convertJsonToMap((JSONObject) value));
+            } else if (value instanceof JSONArray) {
+                map.putArray(key, convertJsonToArray((JSONArray) value));
+            } else if (value instanceof  Boolean) {
+                map.putBoolean(key, (Boolean) value);
+            } else if (value instanceof  Integer) {
+                map.putInt(key, (Integer) value);
+            } else if (value instanceof  Double) {
+                map.putDouble(key, (Double) value);
+            } else if (value instanceof String)  {
+                map.putString(key, (String) value);
+            } else {
+                map.putString(key, value.toString());
+            }
+        }
+        return map;
+    }
+
+    private static WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
+        WritableArray array = new WritableNativeArray();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            Object value = jsonArray.get(i);
+            if (value instanceof JSONObject) {
+                array.pushMap(convertJsonToMap((JSONObject) value));
+            } else if (value instanceof  JSONArray) {
+                array.pushArray(convertJsonToArray((JSONArray) value));
+            } else if (value instanceof  Boolean) {
+                array.pushBoolean((Boolean) value);
+            } else if (value instanceof  Integer) {
+                array.pushInt((Integer) value);
+            } else if (value instanceof  Double) {
+                array.pushDouble((Double) value);
+            } else if (value instanceof String)  {
+                array.pushString((String) value);
+            } else {
+                array.pushString(value.toString());
+            }
+        }
+        return array;
     }
 }
