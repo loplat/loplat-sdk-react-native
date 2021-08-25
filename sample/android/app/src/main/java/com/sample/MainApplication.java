@@ -98,7 +98,6 @@ public class MainApplication extends Application implements ReactApplication {
     }
 
     public void loplatSdkConfiguration() {
-        Context context = this;
         Plengi plengi = Plengi.getInstance(this);
 
         // 고객사에 발급한 로플랫 SDK client ID/PW 입력
@@ -141,55 +140,5 @@ public class MainApplication extends Application implements ReactApplication {
 
         // Loplat SDK 설정들은 반드시 Plengi.init() 전에 호출 필요
         plengi.init(clientId, clientSecret, echoCode);
-
-        // 위치 서비스 약관 동의 여부 체크
-        if (isLocationServiceAgreed(context)) {
-            // 마케팅 동의 여부 체크
-            if (isMarketingServiceAgreed(context)) {
-                // 마케팅 수신에 동의한 user에 대해서 로플랫 켐페인 설정
-
-                // 고객사가 직접 푸시 메세지 광고를 하는 경우
-                plengi.enableAdNetwork(true, false);
-
-                // 로플랫 SDK 에 푸시 메세지 광고를 맡기는 경우
-                // Plengi.getInstance(this).enableAdNetwork(true);
-                // Plengi.getInstance(this).setAdNotiLargeIcon(R.drawable.ic_launcher);
-                // Plengi.getInstance(this).setAdNotiSmallIcon(R.drawable.ic_launcher);
-            } else {
-                // 마케팅 동의 거부한 user에 대해서 로플랫 켐페인 설정 중단
-                plengi.enableAdNetwork(false);
-            }
-
-            plengi.start();
-        } else {
-            // 위치 서비스 약관 동의 거부한 user에 대해서 SDK stop
-            plengi.stop();
-        }
-    }
-
-    /**
-     * 위치 기반 서비스 약관 동의 여부 확인
-     */
-    public static boolean isLocationServiceAgreed(Context context) {
-        boolean isLocationServiceAgreed = false;
-        try {
-            SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-            isLocationServiceAgreed = settings.getBoolean("location_agreement", false);
-        } catch (Exception e) {
-        }
-        return isLocationServiceAgreed;
-    }
-
-    /**
-     * 마케팅 수신 동의 여부 확인
-     */
-    public static boolean isMarketingServiceAgreed(Context context) {
-        boolean isMarketingServiceAgreed = false;
-        try {
-            SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-            isMarketingServiceAgreed = settings.getBoolean("marketing_agreement", false);
-        } catch (Exception e) {
-        }
-        return isMarketingServiceAgreed;
     }
 }

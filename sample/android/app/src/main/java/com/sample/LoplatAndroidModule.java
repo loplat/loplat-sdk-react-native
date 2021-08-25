@@ -18,9 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 import com.facebook.react.bridge.ActivityEventListener;
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.modules.core.PermissionListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -60,17 +62,11 @@ public class LoplatAndroidModule extends ReactContextBaseJavaModule implements A
 
     @Override
     public String getName() {
-        return "LoplatAndroidApp";
+        return "AndroidPlengi";
     }
 
     @ReactMethod
-    public void showToast(String message) {
-        Log.d("LOGTAG/NOW", "showToast");
-        Toast.makeText(reactContext, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @ReactMethod
-    public void initLoplatSDK(String clientId, String clientSecret, String echoCode) {
+    public void init(String clientId, String clientSecret, String echoCode, Callback callback) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             /**
              * 백그라운드에서 동작 시 출력될 ForgroundService의 알림 설정
@@ -99,76 +95,34 @@ public class LoplatAndroidModule extends ReactContextBaseJavaModule implements A
         }
 
         // Loplat SDK 설정들은 반드시 Plengi.init() 전에 호출 필요
-        Plengi.getInstance(reactContext).init(clientId, clientSecret, echoCode);
-
-        // 위치 서비스 약관 동의 여부 체크
-        if (MainApplication.isLocationServiceAgreed(reactContext)) {
-            // 마케팅 동의 여부 체크
-            if (MainApplication.isMarketingServiceAgreed(reactContext)) {
-                // 마케팅 수신에 동의한 user에 대해서 로플랫 켐페인 설정
-
-                // 고객사가 직접 푸시 메세지 광고를 하는 경우
-                Plengi.getInstance(reactContext).enableAdNetwork(true, false);
-
-                // 로플랫 SDK 에 푸시 메세지 광고를 맡기는 경우
-                // Plengi.getInstance(this).enableAdNetwork(true);
-
-                // 푸시 메시지와 관련된 알림 아이콘 설정
-                // Plengi.getInstance(this).setAdNotiLargeIcon(R.drawable.ic_launcher);
-                // Plengi.getInstance(this).setAdNotiSmallIcon(R.drawable.ic_launcher);
-            } else {
-                // 마케팅 동의 거부한 user에 대해서 로플랫 켐페인 설정 중단
-                Plengi.getInstance(reactContext).enableAdNetwork(false);
-            }
-
-            // 위치 서비스 약관 동의한 user에 대해서 로플랫 SDK start
-            Plengi.getInstance(reactContext).start();
-        } else {
-            // 위치 서비스 약관 동의 거부한 user에 대해서 로플랫 SDK stop
-            Plengi.getInstance(reactContext).stop();
-        }
+        Toast.makeText(reactContext, "init", Toast.LENGTH_SHORT).show();
+        int result = Plengi.getInstance(reactContext).init(clientId, clientSecret, echoCode);
+        Log.d("LOGTAG/INIT", String.valueOf(result));
+        callback.invoke(result);
     }
 
     @ReactMethod
-    public void startLoplatSDK() {
+    public void start(Callback callback) {
         // 로플랫 SDK start
-        Plengi.getInstance(reactContext).start();
+        Toast.makeText(reactContext, "start", Toast.LENGTH_SHORT).show();
+        int result = Plengi.getInstance(reactContext).start();
+        Log.d("LOGTAG/START", String.valueOf(result));
+        callback.invoke(result);
     }
 
     @ReactMethod
-    public void stopLoplatSDK() {
+    public void stop(Callback callback) {
         // 로플랫 SDK stop
-        Plengi.getInstance(reactContext).stop();
+        Toast.makeText(reactContext, "stop", Toast.LENGTH_SHORT).show();
+        int result = Plengi.getInstance(reactContext).stop();
+        Log.d("LOGTAG/STOP", String.valueOf(result));
+        callback.invoke(result);
     }
 
     @ReactMethod
-    public void setEnableAdNetwork(boolean b) {
-        Plengi.getInstance(reactContext).enableAdNetwork(b);
-    }
-
-    @ReactMethod
-    public void setEnableAdNetwork(boolean b1, boolean b2) {
-        Plengi.getInstance(reactContext).enableAdNetwork(b1, b2);
-    }
-
-    @ReactMethod
-    public boolean permissionRequestLocation() {
-        if(MainApplication.isLocationServiceAgreed(reactContext)){
-            return true;
-        }else{
-            // 권한을 받아서 true 인지 false 인지 반환
-            return false;
-        }
-    }
-
-    @ReactMethod
-    public boolean permissionRequestMarketing() {
-        if(MainApplication.isMarketingServiceAgreed(reactContext)){
-            return true;
-        }else{
-            // 권한을 받아서 true 인지 false 인지 반환
-            return false;
-        }
+    public void enableAdNetwork(boolean isEnableAdNetwork, boolean isEnableLoplatX) {
+        Toast.makeText(reactContext, "enableAdNetwork:"+ isEnableAdNetwork + isEnableLoplatX, Toast.LENGTH_SHORT).show();
+        Plengi.getInstance(reactContext).enableAdNetwork(isEnableAdNetwork, isEnableLoplatX);
     }
 
     @Override
