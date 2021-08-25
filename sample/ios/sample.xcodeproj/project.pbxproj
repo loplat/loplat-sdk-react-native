@@ -12,6 +12,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1755B569671536DA17EBF254 /* libPods-sample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10B019F089B6ED47603DEEDE /* libPods-sample.a */; };
+		7CC05E2C26D3A7BA007C6BBA /* iosPelngi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC05E2B26D3A7BA007C6BBA /* iosPelngi.swift */; };
+		7CC05E3226D3AF2C007C6BBA /* RCTiosPlengiModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC05E3126D3AF2C007C6BBA /* RCTiosPlengiModule.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		87DF463E147D83F0B3683999 /* libPods-sample-sampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD69C9C6E988D2F8D6D49AE /* libPods-sample-sampleTests.a */; };
 /* End PBXBuildFile section */
@@ -39,6 +41,11 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = sample/main.m; sourceTree = "<group>"; };
 		54E9EB8E877D48528ABCF72F /* Pods-sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sample.release.xcconfig"; path = "Target Support Files/Pods-sample/Pods-sample.release.xcconfig"; sourceTree = "<group>"; };
 		55D3D7DE5CBDA42A77C49F94 /* Pods-sample-sampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sample-sampleTests.release.xcconfig"; path = "Target Support Files/Pods-sample-sampleTests/Pods-sample-sampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		7CC05E2926D3A68A007C6BBA /* sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = sample.entitlements; path = sample/sample.entitlements; sourceTree = "<group>"; };
+		7CC05E2A26D3A7B9007C6BBA /* sample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sample-Bridging-Header.h"; sourceTree = "<group>"; };
+		7CC05E2B26D3A7BA007C6BBA /* iosPelngi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosPelngi.swift; sourceTree = "<group>"; };
+		7CC05E3026D3AEE1007C6BBA /* RCTiosPlengiModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTiosPlengiModule.h; sourceTree = "<group>"; };
+		7CC05E3126D3AF2C007C6BBA /* RCTiosPlengiModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTiosPlengiModule.m; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = sample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		81E1AB0882763B4A23B658F7 /* Pods-sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-sample.debug.xcconfig"; path = "Target Support Files/Pods-sample/Pods-sample.debug.xcconfig"; sourceTree = "<group>"; };
 		8DD69C9C6E988D2F8D6D49AE /* libPods-sample-sampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-sample-sampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,12 +93,17 @@
 		13B07FAE1A68108700A75B9A /* sample */ = {
 			isa = PBXGroup;
 			children = (
+				7CC05E2926D3A68A007C6BBA /* sample.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				7CC05E3026D3AEE1007C6BBA /* RCTiosPlengiModule.h */,
+				7CC05E3126D3AF2C007C6BBA /* RCTiosPlengiModule.m */,
+				7CC05E2B26D3A7BA007C6BBA /* iosPelngi.swift */,
+				7CC05E2A26D3A7B9007C6BBA /* sample-Bridging-Header.h */,
 			);
 			name = sample;
 			sourceTree = "<group>";
@@ -114,7 +126,6 @@
 				B0EE4E5A157BBC10E71EA228 /* Pods-sample-sampleTests.debug.xcconfig */,
 				55D3D7DE5CBDA42A77C49F94 /* Pods-sample-sampleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -208,7 +219,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -412,6 +423,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				7CC05E2C26D3A7BA007C6BBA /* iosPelngi.swift in Sources */,
+				7CC05E3226D3AF2C007C6BBA /* RCTiosPlengiModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,6 +444,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B0EE4E5A157BBC10E71EA228 /* Pods-sample-sampleTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -458,6 +472,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55D3D7DE5CBDA42A77C49F94 /* Pods-sample-sampleTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = sampleTests/Info.plist;
@@ -484,7 +499,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = sample/sample.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A95LYLM64V;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -496,8 +513,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.loplat.sdk.react.native;
 				PRODUCT_NAME = sample;
+				SWIFT_OBJC_BRIDGING_HEADER = "sample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -510,7 +528,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = sample/sample.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = A95LYLM64V;
 				INFOPLIST_FILE = sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -521,8 +541,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.loplat.sdk.react.native;
 				PRODUCT_NAME = sample;
+				SWIFT_OBJC_BRIDGING_HEADER = "sample-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
