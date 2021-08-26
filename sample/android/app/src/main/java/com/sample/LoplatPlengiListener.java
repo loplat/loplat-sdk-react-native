@@ -45,15 +45,26 @@ public class LoplatPlengiListener implements PlengiListener {
 
             ReactInstanceManager reactInstanceManager = reactNativeHost.getReactInstanceManager();
             ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
-            reactContext
-                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                    .emit("listen", params);
-        } catch (JSONException e) {
+            if(reactContext != null){
+                reactContext
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("listen", params);
+            }else{
+                reactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+                    @Override
+                    public void onReactContextInitialized(ReactContext context) {
+                        context
+                                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                                .emit("listen", params);
+                    }
+                });
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
+    private static WritableMap convertJsonToMap(JSONObject jsonObject) throws Exception {
         WritableMap map = new WritableNativeMap();
 
         Iterator<String> iterator = jsonObject.keys();
@@ -79,7 +90,7 @@ public class LoplatPlengiListener implements PlengiListener {
         return map;
     }
 
-    private static WritableArray convertJsonToArray(JSONArray jsonArray) throws JSONException {
+    private static WritableArray convertJsonToArray(JSONArray jsonArray) throws Exception {
         WritableArray array = new WritableNativeArray();
 
         for (int i = 0; i < jsonArray.length(); i++) {
