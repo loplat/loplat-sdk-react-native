@@ -9,6 +9,7 @@ const SWITCH_TYPE_MARKETING = 2
 
 const App = () => {
 
+  NativeModules.iosPlengi.requestIdfa()
   // instantiate the event emitter
   const iosPlengi = new NativeEventEmitter(NativeModules.iosPlengi)
   // subscribe to event
@@ -82,6 +83,7 @@ const SwitchComponent = (props) => {
 
         // loplat X를 사용하여 캠페인 알림을 매칭하려는 경우 enableAdNetwork를 true, true로 세팅합니다.
          NativeModules.iosPlengi.enableAdNetwork(value, value)
+         NativeModules.iosPlengi.requestAlert()
       }
     }
   }
