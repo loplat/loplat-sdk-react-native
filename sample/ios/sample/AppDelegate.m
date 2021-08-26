@@ -30,16 +30,6 @@ static void InitializeFlipper(UIApplication *application) {
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
-  if ([Plengi initializeWithClientID:@"loplatdemo"
-                clientSecret:@"loplatdemokey"
-                          echoCode:NULL] == ResultSUCCESS) {
-        // init 성공
-        NSLog(@"init 성공");
-  } else {
-        // init 실패
-        NSLog(@"init 성공");
-  }
-
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"sample"
@@ -56,6 +46,18 @@ static void InitializeFlipper(UIApplication *application) {
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  if ([Plengi initializeWithClientID:@"loplatdemo"
+                clientSecret:@"loplatdemokey"
+                          echoCode:NULL] == ResultSUCCESS) {
+        // init 성공
+        NSLog(@"init 성공");
+        [Plengi setIsDebug:YES];
+
+  } else {
+        // init 실패
+        NSLog(@"init 실패");
+  }
   return YES;
 }
 
