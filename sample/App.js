@@ -57,9 +57,11 @@ const App = () => {
       }
     }
 
+
     // Loplat SDK 의 위치정보의 결과 값을 Native(android) 에서 React-Native 로 불러오기 위한 리스너 등록
     DeviceEventEmitter.addListener('listen', onListenSDK);
   } else if (Platform.OS === 'ios') {
+    NativeModules.iosPlengi.requestIdfa()
     // instantiate the event emitter
     const iosPlengi = new NativeEventEmitter(NativeModules.iosPlengi)
     // subscribe to event
@@ -154,7 +156,8 @@ const SwitchComponent = (props) => {
          */
 
         // loplat X를 사용하여 캠페인 알림을 매칭하려는 경우 enableAdNetwork를 true, true로 세팅합니다.
-        NativeModules.iosPlengi.enableAdNetwork(value, value)
+         NativeModules.iosPlengi.enableAdNetwork(value, value)
+         NativeModules.iosPlengi.requestAlert()
       }
     }
   }
