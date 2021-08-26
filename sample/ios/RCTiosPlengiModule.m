@@ -20,6 +20,9 @@ RCT_EXTERN_METHOD(stop:(RCTResponseSenderBlock)callback)
 
 RCT_EXTERN_METHOD(enableAdNetwork:(BOOL *)enableAd enableNoti:(BOOL *)enableNoti)
 RCT_EXTERN_METHOD(requestAlwaysAuthorization)
+RCT_EXTERN_METHOD(requestIdfa)
+RCT_EXTERN_METHOD(requestAlert)
 RCT_EXTERN_METHOD(supportedEvents)
+
 @end
 
