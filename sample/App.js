@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules, DeviceEventEmitter, PermissionsAndroid} from "react-native";
 
 const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
-const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
+const SWITCH_TEXT_MARKETING = "마케팅 알림 동의"
 
 const SWITCH_TYPE_LOCATION = 1
 const SWITCH_TYPE_MARKETING = 2
@@ -30,7 +30,7 @@ const requestPermission = async () => {
 }
 
 const App = () => {
-  const [resultText, setMyText] = useState("Default Text");
+  const [resultText, setMyText] = useState("장소 인식 결과");
 
   if (Platform.OS === 'android') {
     requestPermission()
@@ -53,7 +53,7 @@ const App = () => {
         // console.log(event.plengiResponse.placeEvent)
         // console.log('plengiResponse finish')
       if(event.plengiResponse != null){      
-        setMyText(JSON.stringify(event.plengiResponse))
+        setMyText(resultText + "\n\n" + JSON.stringify(event.plengiResponse))
       }
     }
 
@@ -66,13 +66,13 @@ const App = () => {
       <StatusBar
         barStyle={'light-content'}
         backgroundColor="#000000" />
-      <Text>{resultText}</Text>
       <SwitchComponent
         text={SWITCH_TEXT_LOCATION}
         type={SWITCH_TYPE_LOCATION} />
       <SwitchComponent
         text={SWITCH_TEXT_MARKETING}
         type={SWITCH_TYPE_MARKETING} />
+      <Text>{resultText}</Text>
     </SafeAreaView>
   );
 }
@@ -105,9 +105,9 @@ const SwitchComponent = (props) => {
       } else if (props.type === SWITCH_TYPE_MARKETING) {
         /**
          * OS: Android
-         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * type: SWITCH_TYPE_MARKETING (마케팅 알림 동의)
          * value: value (동의 여부)
-         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         * 작성 내용: 마케팅 알림 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
          */
         if (value === true) {
           NativeModules.AndroidPlengi.enableAdNetwork(value, value)
@@ -129,9 +129,9 @@ const SwitchComponent = (props) => {
         console.log('SWITCH_TYPE_MARKETING')
         /**
          * OS: iOS
-         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * type: SWITCH_TYPE_MARKETING (마케팅 알림 동의)
          * value: value (동의 여부)
-         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         * 작성 내용: 마케팅 알림 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
          */
       }
     }
@@ -154,9 +154,10 @@ const SwitchComponent = (props) => {
 const appStyles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 16,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   }
 });
 
