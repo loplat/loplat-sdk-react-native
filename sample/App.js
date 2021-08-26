@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-<<<<<<< HEAD
-import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules, DeviceEventEmitter, PermissionsAndroid } from "react-native";
-=======
-import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, ToastAndroid, Alert, NativeModules, NativeEventEmitter } from "react-native";
->>>>>>> 328c72b9d20ad7462b65acc71f01b5a1e1695308
+import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules, DeviceEventEmitter, PermissionsAndroid, NativeEventEmitter } from "react-native";
 
 const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
 const SWITCH_TEXT_MARKETING = "마케팅 알림 동의"
