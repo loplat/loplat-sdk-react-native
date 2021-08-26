@@ -45,18 +45,16 @@ const App = () => {
      */
 
     const onListenSDK = (event) => {
-      /**
-       * Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
-       * console.log('plengiResponse start')
-       * console.log(typeof event.plengiResponse)
-       * console.log(event.plengiResponse)
-       * console.log(event.plengiResponse.type)
-       * console.log(event.plengiResponse.placeEvent)
-       * console.log(event.plengiResponse.place.category)
-       * console.log('plengiResponse finish')
-       */
-
-      setMyText(JSON.stringify(event.plengiResponse))
+        //Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
+        console.log('plengiResponse start')
+        console.log(typeof event.plengiResponse)
+        console.log(event.plengiResponse)
+        console.log(event.plengiResponse.type)
+        console.log(event.plengiResponse.placeEvent)
+        console.log('plengiResponse finish')
+      if(event.plengiResponse != null){      
+        setMyText(JSON.stringify(event.plengiResponse))
+      }
     }
 
     // Loplat SDK 의 위치정보의 결과 값을 Native(android) 에서 React-Native 로 불러오기 위한 리스너 등록
