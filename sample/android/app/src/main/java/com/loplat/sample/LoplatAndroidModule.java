@@ -1,4 +1,4 @@
-package com.sample;
+package com.loplat.sample;
 
 import android.Manifest;
 import android.app.Activity;

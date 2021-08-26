@@ -1,4 +1,4 @@
-package com.sample;
+package com.loplat.sample;
 
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;

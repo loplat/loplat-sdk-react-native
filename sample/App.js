@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules, DeviceEventEmitter, PermissionsAndroid} from "react-native";
+import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, NativeModules, DeviceEventEmitter, PermissionsAndroid, NativeEventEmitter } from "react-native";
 
 const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
-const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
+const SWITCH_TEXT_MARKETING = "마케팅 알림 동의"
 
 const SWITCH_TYPE_LOCATION = 1
 const SWITCH_TYPE_MARKETING = 2
@@ -14,23 +14,23 @@ const SWITCH_TYPE_MARKETING = 2
  */
 const requestPermission = async () => {
   if (Platform.OS === "android") {
-      await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-      ]).then((result)=>{
-          if (result['android.permission.ACCESS_FINE_LOCATION']
-          && result['android.permission.ACCESS_COARSE_LOCATION']
-          === 'granted') {
-              console.log("모든 권한 획득");
-          } else{
-              console.log("권한거절");
-          }
-      })
+    await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+    ]).then((result) => {
+      if (result['android.permission.ACCESS_FINE_LOCATION']
+        && result['android.permission.ACCESS_COARSE_LOCATION']
+        === 'granted') {
+        console.log("모든 권한 획득");
+      } else {
+        console.log("권한거절");
+      }
+    })
   }
 }
 
 const App = () => {
-  const [resultText, setMyText] = useState("Default Text");
+  const [resultText, setMyText] = useState("장소 인식 결과 ");
 
   if (Platform.OS === 'android') {
     requestPermission()
@@ -45,20 +45,28 @@ const App = () => {
      */
 
     const onListenSDK = (event) => {
-        // Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
-        // console.log('plengiResponse start')
-        // console.log(typeof event.plengiResponse)
-        // console.log(event.plengiResponse)
-        // console.log(event.plengiResponse.type)
-        // console.log(event.plengiResponse.placeEvent)
-        // console.log('plengiResponse finish')
-      if(event.plengiResponse != null){      
+      //Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
+      // console.log('plengiResponse start')
+      // console.log(typeof event.plengiResponse)
+      // console.log(event.plengiResponse)
+      // console.log(event.plengiResponse.type)
+      // console.log(event.plengiResponse.placeEvent)
+      // console.log('plengiResponse finish')
+      if (event.plengiResponse != null) {
         setMyText(JSON.stringify(event.plengiResponse))
       }
     }
 
     // Loplat SDK 의 위치정보의 결과 값을 Native(android) 에서 React-Native 로 불러오기 위한 리스너 등록
     DeviceEventEmitter.addListener('listen', onListenSDK);
+  } else if (Platform.OS === 'ios') {
+    // instantiate the event emitter
+    const iosPlengi = new NativeEventEmitter(NativeModules.iosPlengi)
+    // subscribe to event
+    iosPlengi.addListener(
+      "onResponsePlaceEvent",
+      res => console.log("onResponsePlaceEvent", res.plengiResponse.location)
+    )
   }
 
   return (
@@ -66,13 +74,13 @@ const App = () => {
       <StatusBar
         barStyle={'light-content'}
         backgroundColor="#000000" />
-      <Text>{resultText}</Text>
       <SwitchComponent
         text={SWITCH_TEXT_LOCATION}
         type={SWITCH_TYPE_LOCATION} />
       <SwitchComponent
         text={SWITCH_TEXT_MARKETING}
         type={SWITCH_TYPE_MARKETING} />
+      <Text>{resultText}</Text>
     </SafeAreaView>
   );
 }
@@ -105,9 +113,9 @@ const SwitchComponent = (props) => {
       } else if (props.type === SWITCH_TYPE_MARKETING) {
         /**
          * OS: Android
-         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * type: SWITCH_TYPE_MARKETING (마케팅 알림 동의)
          * value: value (동의 여부)
-         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         * 작성 내용: 마케팅 알림 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
          */
         if (value === true) {
           NativeModules.AndroidPlengi.enableAdNetwork(value, value)
@@ -125,14 +133,28 @@ const SwitchComponent = (props) => {
          * value: value (동의 여부)
          * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
          */
-      } else if (props.type === SWITCH_TYPE_MARKETING) {
-        console.log('SWITCH_TYPE_MARKETING')
+        if (value == true) {
+            // 유저가 위치기반약관을 동의하면 iOS 시스템 위치 권한 요청 및 loplat SDK가 start됩니다.
+            NativeModules.iosPlengi.requestAlwaysAuthorization()
+            NativeModules.iosPlengi.start( (result) => {
+              console.log("start is ", result)
+            })
+        } else {
+            // 유저가 위치기반약관을 철회하면  loplat SDK를 stop 시킵니다.
+            NativeModules.iosPlengi.stop( (result) => {
+              console.log("stop is ", result)
+            })
+        }
+      }else if(props.type === SWITCH_TYPE_MARKETING){
         /**
          * OS: iOS
-         * type: SWITCH_TYPE_MARKETING (마케팅 서비스 동의)
+         * type: SWITCH_TYPE_MARKETING (마케팅 알림 동의)
          * value: value (동의 여부)
-         * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
+         * 작성 내용: 마케팅 알림 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
          */
+
+        // loplat X를 사용하여 캠페인 알림을 매칭하려는 경우 enableAdNetwork를 true, true로 세팅합니다.
+        NativeModules.iosPlengi.enableAdNetwork(value, value)
       }
     }
   }
@@ -154,9 +176,10 @@ const SwitchComponent = (props) => {
 const appStyles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 16,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   }
 });
 
