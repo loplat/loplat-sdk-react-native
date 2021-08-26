@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, ToastAndroid, Alert, NativeModules } from "react-native";
+import { Platform, SafeAreaView, Text, StatusBar, Switch, StyleSheet, ToastAndroid, Alert, NativeModules, NativeEventEmitter } from "react-native";
 
 const SWITCH_TEXT_LOCATION = "위치 기반 서비스 동의"
 const SWITCH_TEXT_MARKETING = "마케팅 서비스 동의"
@@ -8,6 +8,15 @@ const SWITCH_TYPE_LOCATION = 1
 const SWITCH_TYPE_MARKETING = 2
 
 const App = () => {
+
+  // instantiate the event emitter
+  const iosPlengi = new NativeEventEmitter(NativeModules.iosPlengi)
+  // subscribe to event
+  iosPlengi.addListener(
+      "onResponsePlaceEvent",
+      res => console.log("onResponsePlaceEvent", res.plengiResponse.location)
+  )
+
   return (
     <SafeAreaView style={appStyles.container}>
       <StatusBar
@@ -51,6 +60,18 @@ const SwitchComponent = (props) => {
          * value: value (동의 여부)
          * 작성 내용: 위치 기반 서비스 동의에 따른 Loplat SDK 동작
          */
+        if (value == true) {
+            // 유저가 위치기반약관을 동의하면 iOS 시스템 위치 권한 요청 및 loplat SDK가 start됩니다.
+            NativeModules.iosPlengi.requestAlwaysAuthorization()
+            NativeModules.iosPlengi.start( (result) => {
+              console.log("start is ", result)
+            })
+        } else {
+            // 유저가 위치기반약관을 철회하면  loplat SDK를 stop 시킵니다.
+            NativeModules.iosPlengi.stop( (result) => {
+              console.log("stop is ", result)
+            })
+        }
       }else if(props.type === SWITCH_TYPE_MARKETING){
         /**
          * OS: iOS
@@ -58,6 +79,9 @@ const SwitchComponent = (props) => {
          * value: value (동의 여부)
          * 작성 내용: 마케팅 서비스 동의에 따른 Loplat SDK 설정 (Loplat X Campaigns)
          */
+
+        // loplat X를 사용하여 캠페인 알림을 매칭하려는 경우 enableAdNetwork를 true, true로 세팅합니다.
+         NativeModules.iosPlengi.enableAdNetwork(value, value)
       }
     }
   }
