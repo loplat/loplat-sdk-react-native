@@ -30,7 +30,7 @@ const requestPermission = async () => {
 }
 
 const App = () => {
-  const [resultText, setMyText] = useState("장소 인식 결과");
+  const [resultText, setMyText] = useState("장소 인식 결과 ");
 
   if (Platform.OS === 'android') {
     requestPermission()
@@ -53,7 +53,7 @@ const App = () => {
         // console.log(event.plengiResponse.placeEvent)
         // console.log('plengiResponse finish')
       if(event.plengiResponse != null){      
-        setMyText(resultText + "\n\n" + JSON.stringify(event.plengiResponse))
+        setMyText(JSON.stringify(event.plengiResponse))
       }
     }
 
