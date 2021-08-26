@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialog_background_location_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/background_location_permission" />
+
+    <TextView
+        android:id="@+id/dialog_background_location_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginVertical="16dp"
+        android:textColor="#8A000000"
+        android:text="The Loplat SDK Sample app collects location data when the app is closed or unused to provide information on the interior store and notification of benefits based on your current location.\n\nThis data is also used to support advertising.\n\Do you want to allow access to the location of this device even when you are not using this app?" />
+</LinearLayout>

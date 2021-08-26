@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">sample</string>
+    <string name="foreground_service_noti_channel_name">실내 매장 정보 및 혜택 알림</string>
+    <string name="foreground_service_noti_title">실내 매장 및 혜택 탐색 중</string>
 </resources>

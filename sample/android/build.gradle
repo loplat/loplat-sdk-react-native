@@ -32,6 +32,13 @@ allprojects {
             url("$rootDir/../node_modules/jsc-android/dist")
         }
 
+        maven {
+            // maven for Loplat SDK
+            url "https://maven.loplat.com/artifactory/plengi-debug"
+        }
+
+        maven { url 'https://naver.jfrog.io/artifactory/maven/' }
+
         google()
         maven { url 'https://www.jitpack.io' }
     }
