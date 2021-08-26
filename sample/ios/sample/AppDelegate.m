@@ -40,6 +40,10 @@ static void InitializeFlipper(UIApplication *application) {
   } else {
       rootView.backgroundColor = [UIColor whiteColor];
   }
+  
+  if (@available(iOS 10.0, *)) {
+    UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+  }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -68,6 +72,38 @@ static void InitializeFlipper(UIApplication *application) {
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+
+
+- (void)application:(UIApplication *)application
+handleActionWithIdentifier:(NSString *)identifier
+    forLocalNotification:(UILocalNotification *)notification
+        completionHandler:(void (^)())completionHandler {
+  [Plengi processLoplatAdvertisement:application
+          handleActionWithIdentifier:identifier
+                      for:notification
+              completionHandler:completionHandler];
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void  (^)(UNNotificationPresentationOptions))completionHandler API_AVAILABLE(ios(10.0)) {
+    completionHandler(UNNotificationPresentationOptionAlert |
+                      UNNotificationPresentationOptionBadge |
+                      UNNotificationPresentationOptionSound);
+}
+
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+didReceiveNotificationResponse:(UNNotificationResponse *)response
+      withCompletionHandler:(void  (^)(void))completionHandler API_AVAILABLE(ios(10.0)) {
+
+  [Plengi processLoplatAdvertisement:center
+              didReceive:response
+              withCompletionHandler:completionHandler];
+  completionHandler();
+  // loplat SDK가 사용자의 알림 트래킹 (Click, Dismiss) 를 처리하기 위한 코드
 }
 
 @end

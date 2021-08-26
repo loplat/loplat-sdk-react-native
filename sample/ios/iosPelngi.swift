@@ -7,6 +7,7 @@
 
 import Foundation
 import MiniPlengi
+import AppTrackingTransparency
 
 
 @objc(iosPlengi)
@@ -85,5 +86,36 @@ class iosPlengi: RCTEventEmitter, PlaceDelegate {
   @objc(requestAlwaysAuthorization)
   func requestAlwaysAuthorization() {
     Plengi.requestAlwaysLocationAuthorization()
+  }
+  
+  @objc(requestIdfa)
+  func requestIdfa() {
+    if #available(iOS 14.5, *) {
+        ATTrackingManager.requestTrackingAuthorization { _ in
+          
+        }
+    }
+  }
+  
+  @objc(requestAlert)
+  func requestAlert() {
+    if #available(iOS 10, *) {
+      DispatchQueue.main.async {
+        UNUserNotificationCenter.current()
+            .requestAuthorization(options:[.badge, .alert, .sound]) { (granted,error) in
+                
+            }
+        UIApplication.shared.registerForRemoteNotifications()
+      }
+        
+    }
+    else {
+      DispatchQueue.main.async {
+        UIApplication.shared.registerUserNotificationSettings(
+            UIUserNotificationSettings(types: [.badge, .sound, .alert],
+                                       categories: nil))
+        UIApplication.shared.registerForRemoteNotifications()
+      }
+    }
   }
 }
