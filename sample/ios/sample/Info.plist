@@ -35,6 +35,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>위치 권한 항상 설명</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>위치 권한 앱 사용 중 설명</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
@@ -53,9 +57,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>위치 권한 항상 설명</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>위치 권한 앱 사용 중 설명</string>
 </dict>
 </plist>
