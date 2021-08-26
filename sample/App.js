@@ -45,7 +45,7 @@ const App = () => {
      */
 
     const onListenSDK = (event) => {
-        // Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
+        //Loplat SDK 의 위치정보가 정상적으로 동작하는지 확인하기 위한 로그
         // console.log('plengiResponse start')
         // console.log(typeof event.plengiResponse)
         // console.log(event.plengiResponse)

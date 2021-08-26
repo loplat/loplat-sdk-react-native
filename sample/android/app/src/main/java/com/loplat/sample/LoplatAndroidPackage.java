@@ -1,4 +1,4 @@
-package com.sample;
+package com.loplat.sample;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
