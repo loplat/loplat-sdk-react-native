@@ -13,7 +13,7 @@ const SWITCH_TYPE_MARKETING = 2
  * 
  * 해당 코드의 샘플은 아래에 있음.
  * 
- * NativeModules.AndroidPlengi.initialize('clientId: String', 'clientSecret: String', 'echo_code: String')
+ * NativeModules.AndroidPlengi.init('clientId: String', 'clientSecret: String', 'echo_code: String') // callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
  * NativeModules.AndroidPlengi.start() // callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
  * NativeModules.AndroidPlengi.stop() // callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
  * NativeModules.AndroidPlengi.enableAdNetwork('enableAd: Bool', 'enableNoti: Bool') // enableAd가 true인 경우 loplat X를 사용합니다. enableNoti가 true인 경우 SDK가 알람이벤트를 자체적으로 발생시킵니다.
@@ -26,7 +26,7 @@ const SWITCH_TYPE_MARKETING = 2
  * 
  * 해당 코드의 샘플은 아래에 있음.
  * 
- * NativeModules.iosPlengi.initialize('clientId: String', 'clientSecret: String', 'echo_code: String')
+ * NativeModules.iosPlengi.initialize('clientId: String', 'clientSecret: String', 'echo_code: String') // callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
  * NativeModules.iosPlengi.start() // callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
  * NativeModules.iosPlengi.stop() // callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
  * NativeModules.iosPlengi.enableAdNetwork('enableAd: Bool', 'enableNoti: Bool') // enableAd가 true인 경우 loplat X를 사용합니다. enableNoti가 true인 경우 SDK가 알람이벤트를 자체적으로 발생시킵니다.
@@ -139,7 +139,7 @@ const SwitchComponent = (props) => {
          */
         if (value === true) {
           // 반드시 유저가 위치 약관을 동의한 이후 start를 호출해 주세요.
-          // start()는 중복호출되어도 한번만 호출됩니다.
+          // start()는 여러번 호출되어도 한번만 동작됩니다.
           NativeModules.AndroidPlengi.start(
             (result) => {
               console.log(`start result: ${result}`); // result가 0면 SUCCESS 이하의 음수 값은 FAIL
