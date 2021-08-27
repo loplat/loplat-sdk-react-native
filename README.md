@@ -22,7 +22,11 @@ React Native loplat plengi Native Modules 가이드
 
 ### Android Native Modules
 
+<br/>
+
 #### 로플랫 SDK 사용
+
+<br/>
 
 ##### 필수 구현 파일
 
@@ -190,7 +194,8 @@ const onListenSDK = (event) => {
 }
 ```
 
-
+<br/>
+<br/>
 
 
 ### iOS Native Modules
@@ -293,6 +298,56 @@ const onListenSDK = (event) => {
 - RCTiosPlengiModule.m // iosPlengi.swift 파일의 구현 내용을 React-Native에서 사용할 수 있도록 하는 Objc 매크로
 - iosPelngi.swift // iOS SDK 랩핑 클래스
 - PlengiResponseForJS.swift // PlengiResponse를 JS에서 사용할 수 있도록 타입 변환하는 객체
+
+<br/>
+
+- 
+
+```swift
+  // iosPlengi.swfit에 작성된 샘플 내용
+	@objc(start:)
+  func start(_ callback: RCTResponseSenderBlock) {
+    let result = Plengi.start()
+    callback([result.rawValue])
+  }
+  
+  @objc(stop:)
+  func stop(_ callback: RCTResponseSenderBlock) {
+    let result = Plengi.stop()
+    callback([result.rawValue])
+  }
+  
+  @objc(enableAdNetwork:enableNoti:)
+  func enableAdNetwork(_ enableAd: Bool, enableNoti: Bool) {
+    _ = Plengi.enableAdNetwork(enableAd, enableNoti: enableNoti)
+  }
+```
+
+<br/>
+
+```objective-c
+// RCTCalendarModule.m에 작성된 내용
+#import "RCTiosPlengiModule.h"
+#import "React/RCTBridgeModule.h"
+#import "React/RCTEventEmitter.h"
+#import <React/RCTLog.h>
+
+@interface RCT_EXTERN_MODULE(iosPlengi, RCTEventEmitter)
+
+RCT_EXTERN_METHOD(initialize:(NSString *)clientId clientSecret:(NSString *)clientSecret: callback:(RCTResponseSenderBlock)callback)
+
+RCT_EXTERN_METHOD(start:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(stop:(RCTResponseSenderBlock)callback)
+
+RCT_EXTERN_METHOD(enableAdNetwork:(BOOL *)enableAd enableNoti:(BOOL *)enableNoti)
+RCT_EXTERN_METHOD(requestAlwaysAuthorization)
+RCT_EXTERN_METHOD(requestIdfa)
+RCT_EXTERN_METHOD(requestAlert)
+RCT_EXTERN_METHOD(supportedEvents)
+
+@end
+
+```
 
 <br/>
 
