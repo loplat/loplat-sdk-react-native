@@ -34,9 +34,9 @@ React Native loplat plengi Native Modules 가이드
 
 ##### 필수 구현 파일
 
-- LoplatAndroidModule
-- LoplatAndroidPackage
-- MainApplication
+- LoplatAndroidModule.java
+- LoplatAndroidPackage.java
+- MainApplication.java
 
 <br/>
 
@@ -143,7 +143,7 @@ private final ReactNativeHost mReactNativeHost =
 
 ##### 필수 구현 파일
 
-- LoplatPlengiListener
+- LoplatPlengiListener.java
 
 <br/>
 
