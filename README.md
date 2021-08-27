@@ -40,6 +40,8 @@ React Native loplat plengi Native Modules 가이드
 
 
 
+
+
 2. AppDelegate.m 함수의 \- (**BOOL**)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 함수 내부에서 아래의 내용을 필수로 호출해 주십시오.
 
    ```objective-c
@@ -64,6 +66,8 @@ React Native loplat plengi Native Modules 가이드
    ```
 
    
+
+
 
 3. loplat X를 알림 서비스를 사용하시면 아래의 내용도 AppDelegate.m에 추가하여야 합니다.
 
@@ -101,6 +105,8 @@ React Native loplat plengi Native Modules 가이드
 
    
 
+
+
 4. 프로젝트명-Bridging-Header.h에서는 NatvieModule 구현을 위해 아래의 React 모듈을 import 해주세요.
 
    ```objective-c
@@ -109,6 +115,8 @@ React Native loplat plengi Native Modules 가이드
    ```
 
    
+   
+
 
 5. iOS NativeModule 구현을 위해서는 샘플 프로젝트에서 아래의 4개의 파일을 참고하여 해당 내용을 필수로 구현해주어야합니다.
 
@@ -116,6 +124,8 @@ React Native loplat plengi Native Modules 가이드
 - RCTiosPlengiModule.m // iosPlengi.swift 파일의 구현 내용을 React-Native에서 사용할 수 있도록 하는 Objc 매크로
 - iosPelngi.swift // iOS SDK 랩핑 클래스
 - PlengiResponseForJS.swift // PlengiResponse를 JS에서 사용할 수 있도록 타입 변환하는 객체
+
+
 
 6. 상위 4개 파일을 구현하면 아래와 같이 iOS SDK의 Native 함수를 다음과 같이 React-Native에서 호출할 수 있습니다.
 
