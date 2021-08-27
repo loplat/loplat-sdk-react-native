@@ -10,7 +10,7 @@ React Native loplat plengi Native Modules 가이드
 
 - 해당 샘플 프로젝트에 적용된 SDK는 TEST 버전 SDK 입니다. (자체 디버그용 UI 포함 및 로깅으로 인한 부하가 있으므로 테스트 용도로만 사용바람)
 - 프로덕션 SDK는 [로플랫 개발자](https://developers.loplat.com) 에 안내되어 있습니다.
-- 샘플앱의 Native Modules만 참고하여 적용해 주시기 바랍니다.
+- Native Modules만 샘플프로젝트를 참고하여 적용해 주시기 바랍니다.
 
 ## How to import
 
@@ -300,8 +300,6 @@ const onListenSDK = (event) => {
 - PlengiResponseForJS.swift // PlengiResponse를 JS에서 사용할 수 있도록 타입 변환하는 객체
 
 <br/>
-
-- 
 
 ```swift
   // iosPlengi.swfit에 작성된 샘플 내용
