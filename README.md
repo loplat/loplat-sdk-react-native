@@ -38,7 +38,7 @@ React Native loplat plengi Native Modules 가이드
 
 위와 같이 Appdelegate.h 함수에 MiniPlengi, Bridging-Header, UserNotification을 import 한 후, AppDelegate interface에서도 UNUserNotificationCenterDelegate 프로토콜을 채택해 주세요. (loplat X 사용을 위한 알림처리)
 
-
+<br/>
 
 
 
@@ -66,7 +66,7 @@ React Native loplat plengi Native Modules 가이드
    ```
 
    
-
+<br/>
 
 
 3. loplat X를 알림 서비스를 사용하시면 아래의 내용도 AppDelegate.m에 추가하여야 합니다.
@@ -103,7 +103,7 @@ React Native loplat plengi Native Modules 가이드
    }
    ```
 
-   
+<br/>
 
 
 
@@ -113,7 +113,7 @@ React Native loplat plengi Native Modules 가이드
    #import "React/RCTBridgeModule.h"
    #import "React/RCTEventEmitter.h"
    ```
-
+<br/>
    
    
 
@@ -125,7 +125,7 @@ React Native loplat plengi Native Modules 가이드
 - iosPelngi.swift // iOS SDK 랩핑 클래스
 - PlengiResponseForJS.swift // PlengiResponse를 JS에서 사용할 수 있도록 타입 변환하는 객체
 
-
+<br/>
 
 6. 상위 4개 파일을 구현하면 아래와 같이 iOS SDK의 Native 함수를 다음과 같이 React-Native에서 호출할 수 있습니다.
 
