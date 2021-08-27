@@ -22,6 +22,175 @@ React Native loplat plengi Native Modules 가이드
 
 ### Android Native Modules
 
+#### 로플랫 SDK 사용
+
+##### 필수 구현 파일
+
+- LoplatAndroidModule
+- LoplatAndroidPackage
+- MainApplication
+
+<br/>
+
+##### LoplatAndroidModule
+
+`LoplatAndroidModule.java` 에 React-Native 에서 로플랫 SDK 의 함수를 호출하기 위한 코드를 작성합니다.
+
+```java
+@Override
+public String getName() {
+    return “AndroidPlengi”;
+}
+@ReactMethod
+public void init(String clientId, String clientSecret, String echoCode, Callback callback) {
+    ...
+}
+@ReactMethod
+public void start(Callback callback) {
+    ...
+}
+@ReactMethod
+public void stop(Callback callback) {
+    ...
+}
+@ReactMethod
+public void enableAdNetwork(boolean isEnableAdNetwork, boolean isEnableLoplatX)
+```
+
+<br/>
+
+이때 아래와 같이 작성한 코드는 React-Native 에서 `NativeModules.모듈명.함수명()` 이렇게 사용됩니다.
+
+```java
+@Override
+public String getName() {
+    return “모듈명“;
+}
+@ReactMethod
+public void 함수명() {
+}
+```
+
+<br/>
+
+
+
+##### LoplatAndroidPackage
+
+`LoplatAndroidPackage.java` 에 모듈클래스인 `LoplatAndroidModule.java` 를 추가합니다.
+
+```java
+@Override
+public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+    List<NativeModule> modules = new ArrayList<>();
+    modules.add(new LoplatAndroidModule(reactContext)); // 모듈 클래스 추가
+    return modules;
+}
+```
+
+<br/>
+
+
+
+##### MainApplication
+
+`MainApplication.java` 에 패키지클래스인 `LoplatAndroidPackage.java`를 추가합니다.
+
+```java
+private final ReactNativeHost mReactNativeHost =
+        new ReactNativeHost(this) {
+            @Override
+            public boolean getUseDeveloperSupport() {
+                return BuildConfig.DEBUG;
+            }
+            @Override
+            protected List<ReactPackage> getPackages() {
+                @SuppressWarnings(“UnnecessaryLocalVariable”)
+                List<ReactPackage> packages = new PackageList(this).getPackages();
+                packages.add(new LoplatAndroidPackage()); // 패키지 클래스 추가한다.
+                return packages;
+            }
+            @Override
+            protected String getJSMainModuleName() {
+                return “index”;
+            }
+        };
+```
+
+<br/>
+
+##### React-Native 에서의 사용
+
+- NativeModules.AndroidPlengi.init(‘clientId: String’, ‘clientSecret: String’, ‘echo_code: String’)
+  - callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
+- NativeModules.AndroidPlengi.start()
+  - callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
+- NativeModules.AndroidPlengi.stop()
+  - callback으로 결과값이 리턴됩니다. SUCCESS는 0 FAIL은 -1이하의 값을 리턴합니다.
+- NativeModules.AndroidPlengi.enableAdNetwork(‘enableAd: Bool’, ‘enableNoti: Bool’)
+  - enableAd가 true인 경우 loplat X를 사용합니다. enableNoti가 true인 경우 SDK가 알람이벤트를 자체적으로 발생시킵니다.
+
+<br/>
+
+#### 장소 인식 결과를 사용
+
+##### 필수 구현 파일
+
+- LoplatPlengiListener
+
+<br/>
+
+##### LoplatPlengiListener
+
+`LoplatPlengiListener.java` 에서 받은 위치 정보 값을 포맷에 맞게 변환 후 React-Native 의 함수에 값을 넣어 호출
+
+```java
+@Override
+public void listen(PlengiResponse response) {
+    // Loplat SDK 로부터 위치 정보를 받은 후 React-Native 에 값을 넘김
+    try {
+        Gson gson = new Gson();
+        String json = gson.toJson(response);
+        JsonObject gsonObject = new JsonParser().parse(json).getAsJsonObject();
+        JSONObject jsonObject = new JSONObject(gsonObject.toString());
+        WritableMap map = convertJsonToMap(jsonObject);
+        WritableMap params = Arguments.createMap();
+        params.putMap(“plengiResponse”, map);
+        ReactInstanceManager reactInstanceManager = reactNativeHost.getReactInstanceManager();
+        ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
+        if(reactContext != null){
+            reactContext
+                    .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(“listen”, params);
+        }else{
+            reactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+                @Override
+                public void onReactContextInitialized(ReactContext context) {
+                    context
+                            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                            .emit(“listen”, params);
+                }
+            });
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+```
+
+<br/>
+
+```javascript
+const onListenSDK = (event) => {
+    // SDK가 위치인식을 하면 결과값을 리턴합니다.
+    // 자세한 사항은 https://developers.loplat.com/ 를 참고해주십시오.
+    if (event.plengiResponse != null) {
+      setMyText(JSON.stringify(event.plengiResponse))
+    }
+}
+```
+
+
 
 
 ### iOS Native Modules
