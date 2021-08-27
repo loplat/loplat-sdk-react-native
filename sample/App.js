@@ -89,9 +89,9 @@ const App = () => {
 
       /**
       * @functions clientId, clientSecret, echoCode 를 변경(설정) 하기 위한 ios bridge 함수
-      * NativeModules.iosPlengi.init(clientId, clientSecret, echoCode,
+      * NativeModules.iosPlengi.initialize(clientId, clientSecret, echoCode,
       *   (result) => {
-      *     console.log(`init result: ${result}`);
+      *     console.log(`initialize result: ${result}`);
       *   }
       * )
       */
