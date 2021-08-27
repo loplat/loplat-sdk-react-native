@@ -302,7 +302,39 @@ const onListenSDK = (event) => {
 <br/>
 
 ```swift
-  // iosPlengi.swfit에 작성된 샘플 내용
+@objc(iosPlengi)
+class iosPlengi: RCTEventEmitter, PlaceDelegate {
+  // PlengiResponse를 위한 함수
+  // 아래 함수 3개를 구현해야지 React-Native에서 위치 인식 결과를 콜백으로 리턴 받을 수 있습니다. 
+  func responsePlaceEvent(_ plengiResponse: PlengiResponse) {
+      let encoder = JSONEncoder()
+      let plengiResponseForJS = PlengiResponseForJS(plengiResponse: plengiResponse)
+      
+      do {
+          let json = try encoder.encode(plengiResponseForJS)
+          do {
+            let jsonData = try JSONSerialization.jsonObject(with: json, options: [])
+            if let jsonDictionary = jsonData as? [String: Any] {
+              sendEvent(withName: "onResponsePlaceEvent", body: ["plengiResponse": jsonDictionary])
+            }
+          } catch {
+            sendEvent(withName: "onResponsePlaceEvent", body: ["error": "Swift to JSON Serialization Error"])
+          }
+      } catch {
+        sendEvent(withName: "onResponsePlaceEvent", body: ["error": "Swift to JSON Encoding Error"])
+      }
+  }
+  
+  override init() {
+      super.init()
+      _ = Plengi.setDelegate(self)
+  }
+
+  override func supportedEvents() -> [String]! {
+    return ["onResponsePlaceEvent"]
+  }  
+  
+	// iOS SDK API
 	@objc(start:)
   func start(_ callback: RCTResponseSenderBlock) {
     let result = Plengi.start()
@@ -319,6 +351,9 @@ const onListenSDK = (event) => {
   func enableAdNetwork(_ enableAd: Bool, enableNoti: Bool) {
     _ = Plengi.enableAdNetwork(enableAd, enableNoti: enableNoti)
   }
+
+  ...
+}
 ```
 
 <br/>
