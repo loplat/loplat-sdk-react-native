@@ -1,22 +1,24 @@
 # Plengi SDK for React Native
-React Native용 loplat plengi 라이브러리
+React Native loplat plengi Native Modules 가이드
 
 ## Installation
-iOS Project -> Podfile 편집 -> pod 'MiniPlengi', '1.4.2.xcode12.5' 추가 (테스트 버전의 경우 pod 'MiniPlengi', '1.4.2.react-native') -> pod install
-Android Project -> 
+- 상세한 내용은 [로플랫 개발자](https://developers.loplat.com) 페이지 참고 바랍니다.
+
+## Cautions
+- 해당 샘플 프로젝트에 적용된 SDK는 TEST 버전 SDK 입니다. (자체 디버그용 UI 포함 및 로깅으로 인한 부하 가능성으로 프로덕션 앱 사용금지)
+- 프로덕션 SDK는 [로플랫 개발자](https://developers.loplat.com) 에 안내되어 있습니다.
+- 샘플앱의 Native Modules만 참고하여 적용해 주시기 바랍니다.
 
 ## How to import
+기본적인 프로젝트 세팅은 [로플랫 개발자](https://developers.loplat.com) 에 안내되어 있습니다. (디펜던시 추가, 프로젝트 세팅, 권한 추가 등)
 
-### iOS
-Xcode .xcworkspace 파일을 오픈하여 info.plist에 다음 권한을 위한 위치 권한 스트링 추가
- - Privacy - Location Always and When In Use Usage Description : '앱의 시나리오에 따른 백그라운드 위치 사용 설명 추가 필수!! ex) 매장 방문 시 할인 쿠폰을 발행하기 위해 백그라운드에서 위치 정보를 사용합니다.'
- - Privacy - Location When In Use Usage Description : '위치 권한 사용 설명 추가'
- - Privacy - Tracking Usage Description : 'IDFA 권한 사용 설명 추가'
+로플랫 SDK를 포함시키기 위하여 Android, iOS 각각의 Native Modules(브릿지 함수)를 작성해야 합니다.
 
-TARGETS -> Signing & Capabilities-> +Capability 버튼 -> Access WiFi Information Entitle 추가 (WiFi 연결 정보를 얻어오는 권한)
-TARGETS -> Signing & Capabilities-> +Capability 버튼 -> Background Modes, Location updates 추가 (백그라운드 동작)
 
-### Android
 
-#### 1. loplat maven 저장소 추가하기
+### iOS Native Modules
+
+### Android Native Modules
+
+
 
