@@ -45,6 +45,8 @@ public class LoplatPlengiListener implements PlengiListener {
 
             ReactInstanceManager reactInstanceManager = reactNativeHost.getReactInstanceManager();
             ReactContext reactContext = reactInstanceManager.getCurrentReactContext();
+            // 샘플앱에 React Native (Javascript) 에 작성된 코드는 Foreground 일 때만 동작합니다. (Background 에서는 Emitter, Callback 등 실행 안됨)
+            // Background 일 때 필요한 기능은 React Native (Javascript) 가 아닌 Native Module 에 작성해주시기 바랍니다.
             if(reactContext != null){
                 reactContext
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
