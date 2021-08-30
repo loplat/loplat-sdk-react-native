@@ -83,6 +83,8 @@ const App = () => {
         }
       }
     // Loplat SDK 의 위치정보의 결과 값을 Native(android) 에서 React-Native 로 불러오기 위한 리스너 등록
+    // 샘플앱에 React Native (Javascript) 에 작성된 코드는 Foreground 일 때만 동작합니다. (Background 에서는 Emitter, Callback 등 실행 안됨)
+    // Background 일 때 필요한 기능은 React Native (Javascript) 가 아닌 Native Module 에 작성해주시기 바랍니다.
     DeviceEventEmitter.addListener('listen', onListenSDK);
   } else if (Platform.OS === 'ios') {
       NativeModules.iosPlengi.requestIdfa() // iOS 시스템 IDFA 권한 요청
@@ -103,6 +105,8 @@ const App = () => {
         }
       }
 
+      // 샘플앱에 React Native (Javascript) 에 작성된 코드는 Foreground 일 때만 동작합니다. (Background 에서는 Emitter, Callback 등 실행 안됨)
+      // Background 일 때 필요한 기능은 React Native (Javascript) 가 아닌 Native Module 에 작성해주시기 바랍니다.
       // instantiate the event emitter
       const iosPlengi = new NativeEventEmitter(NativeModules.iosPlengi)
       // subscribe to event
