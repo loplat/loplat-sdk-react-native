@@ -15,6 +15,8 @@ React Native loplat plengi Native Modules 가이드
 - 해당 샘플 프로젝트에 적용된 SDK는 TEST 버전 SDK 입니다. (자체 디버그용 UI 포함 및 로깅으로 인한 부하가 있으므로 테스트 용도로만 사용바람)
 - 프로덕션 SDK는 [로플랫 개발자](https://developers.loplat.com) 에 안내되어 있습니다.
 - Native Modules만 샘플프로젝트를 참고하여 적용해 주시기 바랍니다.
+- React Native (Javascript) 에서 실행되는 기능은 Foreground 일 때만 동작합니다. (Background 에서는 Emitter, Callback 등 실행 안됨)
+- Background 일 때 필요한 기능은 React Native (Javascript) 가 아닌 Native (Android, iOS) 에서 실행해 주시기 바랍니다.
 
 <br/>
 
